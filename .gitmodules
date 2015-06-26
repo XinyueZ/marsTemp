@@ -1,0 +1,3 @@
+[submodule "marsTemp/submodules/ChoppingBootstrap"]
+	path = marsTemp/submodules/ChoppingBootstrap
+	url = https://github.com/XinyueZ/Chopping.git
