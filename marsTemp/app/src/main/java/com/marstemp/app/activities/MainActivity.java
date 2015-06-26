@@ -1,11 +1,13 @@
 package com.marstemp.app.activities;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,6 +36,7 @@ import com.marstemp.ds.Archive;
 import com.marstemp.ds.Entry;
 import com.marstemp.ds.Latest;
 import com.marstemp.utils.Prefs;
+import com.marstemp.widgets.DynamicShareActionProvider;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -250,8 +253,7 @@ public class MainActivity extends MarsTempActivity {
 				mPage = 1;
 				mLoadingArchive = false;
 				mBinding.getEntriesAdapter().getData().clear();
-				Snackbar.make(mBinding.coordinatorLayout, R.string.lbl_reload,
-						Snackbar.LENGTH_SHORT).show();
+				Snackbar.make(mBinding.coordinatorLayout, R.string.lbl_reload, Snackbar.LENGTH_SHORT).show();
 				getArchive();
 			}
 		});
@@ -299,6 +301,26 @@ public class MainActivity extends MarsTempActivity {
 		return true;
 	}
 
+	@Override
+	public boolean onPrepareOptionsMenu(final Menu menu) {
+		//Share application.
+		MenuItem menuAppShare = menu.findItem(R.id.action_share);
+		DynamicShareActionProvider shareLaterProvider = (DynamicShareActionProvider) MenuItemCompat.getActionProvider(
+				menuAppShare);
+		shareLaterProvider.setShareDataType("text/plain");
+		shareLaterProvider.setOnShareLaterListener(new DynamicShareActionProvider.OnShareLaterListener() {
+			@Override
+			public void onShareClick(final Intent shareIntent) {
+				String subject = getString(R.string.lbl_share_app_title);
+				String text = getString(R.string.lbl_share_app_content, getString(R.string.application_name),
+						Prefs.getInstance().getAppDownloadInfo());
+				shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+				shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+				startActivity(shareIntent);
+			}
+		});
+		return super.onPrepareOptionsMenu(menu);
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -316,19 +338,25 @@ public class MainActivity extends MarsTempActivity {
 	@Override
 	protected void onAppConfigLoaded() {
 		super.onAppConfigLoaded();
-		showAppList();
-		com.marstemp.api.Api.initialize(App.Instance, Prefs.getInstance().getApiHost());
-		getLatest();
-		getArchive();
+		onFinishedConfig();
 	}
+
 
 	@Override
 	protected void onAppConfigIgnored() {
 		super.onAppConfigIgnored();
+		onFinishedConfig();
+	}
+
+	/**
+	 * App-config has been done.
+	 */
+	private void onFinishedConfig() {
 		showAppList();
-		com.marstemp.api.Api.initialize(App.Instance, Prefs.getInstance().getApiHost());
+		Api.initialize(App.Instance, Prefs.getInstance().getApiHost());
 		getLatest();
 		getArchive();
+		Utils.showShortToast(App.Instance, R.string.lbl_loading_archive);
 	}
 
 	/**
@@ -356,7 +384,7 @@ public class MainActivity extends MarsTempActivity {
 					Entry entry = latest.getReport();
 					String latestReport = getString(R.string.lbl_latest_report_content, entry.getMinTemp(),
 							entry.getMaxTemp(), entry.getPressure(), entry.getAtmoOpacity(), entry.getSunrise(),
-							entry.getSunset());
+							entry.getSunset(), entry.getSeason(), entry.getTerrestrialDate());
 					mLatestReportTv.setText(latestReport);
 					mLoadingLatest = false;
 					Utils.showLongToast(App.Instance, R.string.lbl_loaded_latest_report);
@@ -388,41 +416,41 @@ public class MainActivity extends MarsTempActivity {
 			mBinding.contentSrl.setRefreshing(true);
 			mLoadingArchive = true;
 			Api.getArchive(Prefs.getInstance().getApiArchive(), mPage, new Callback<Archive>() {
-						@Override
-						public void success(Archive archive, Response response) {
-							if (TextUtils.equals(archive.getDetail(), App.NOT_FOUND)) {
-								mIsBottom = true;
-								Snackbar.make(mBinding.coordinatorLayout, R.string.lbl_no_more_data,
-										Snackbar.LENGTH_LONG).show();
-							} else {
-								mBinding.getEntriesAdapter().getData().addAll(archive.getResults());
-								mBinding.getEntriesAdapter().notifyDataSetChanged();
-								//Finish loading
-								mBinding.contentSrl.setRefreshing(false);
-								mLoadingArchive = false;
-								mLoading = true;
-							}
-						}
+				@Override
+				public void success(Archive archive, Response response) {
+					if (TextUtils.equals(archive.getDetail(), App.NOT_FOUND)) {
+						mIsBottom = true;
+						Snackbar.make(mBinding.coordinatorLayout, R.string.lbl_no_more_data, Snackbar.LENGTH_LONG)
+								.show();
+					} else {
+						mBinding.getEntriesAdapter().getData().addAll(archive.getResults());
+						mBinding.getEntriesAdapter().notifyDataSetChanged();
+						//Finish loading
+						mBinding.contentSrl.setRefreshing(false);
+						mLoadingArchive = false;
+						mLoading = true;
+					}
+				}
 
-						@Override
-						public void failure(RetrofitError error) {
-							if (mPage > App.FIRST_PAGE) {
-								mPage--;
-							}
-							Snackbar.make(mBinding.coordinatorLayout, R.string.lbl_loading_error, Snackbar.LENGTH_LONG)
-									.setAction(R.string.btn_retry, new OnClickListener() {
-										@Override
-										public void onClick(View v) {
-											getArchive();
-										}
-									}).show();
+				@Override
+				public void failure(RetrofitError error) {
+					if (mPage > App.FIRST_PAGE) {
+						mPage--;
+					}
+					Snackbar.make(mBinding.coordinatorLayout, R.string.lbl_loading_error, Snackbar.LENGTH_LONG)
+							.setAction(R.string.btn_retry, new OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									getArchive();
+								}
+							}).show();
 
-							//Finish loading
-							mBinding.contentSrl.setRefreshing(false);
-							mLoadingArchive = false;
-							mLoading = true;
-						}
-					});
+					//Finish loading
+					mBinding.contentSrl.setRefreshing(false);
+					mLoadingArchive = false;
+					mLoading = true;
+				}
+			});
 		}
 	}
 }

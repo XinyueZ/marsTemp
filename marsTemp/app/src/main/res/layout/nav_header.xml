@@ -15,12 +15,12 @@
   -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="192dp"
+    android:layout_height="250dp"
     android:background="?attr/colorPrimaryDark"
+    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <LinearLayout
@@ -38,8 +38,8 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="start|top"
-                android:background="@color/common_transparent"
                 android:layout_marginRight="@dimen/common_margin_padding"
+                android:background="@color/common_transparent"
                 android:contentDescription="@string/lbl_latest_data"
                 android:src="@drawable/ic_launcher" />
 
@@ -47,19 +47,23 @@
             <com.marstemp.widgets.FontTextView
                 style="@style/Text.Bold"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:layout_gravity="center_vertical"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:text="@string/lbl_latest_data"
                 android:textColor="@color/common_white" />
         </LinearLayout>
 
-
-        <com.marstemp.widgets.FontTextView
-            android:id="@+id/latest_data_tv"
-            style="@style/Text.Normal.Small"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/common_white" />
+            android:layout_height="wrap_content">
 
+            <com.marstemp.widgets.FontTextView
+                android:id="@+id/latest_data_tv"
+                style="@style/Text.Normal.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/common_white" />
+        </ScrollView>
 
     </LinearLayout>
 
@@ -70,7 +74,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginTop="@dimen/common_margin_padding"
-        android:background="@color/common_transparent" >
+        android:background="@color/common_transparent">
 
         <com.marstemp.widgets.FontTextView
             style="@style/Text.Bold.Small"

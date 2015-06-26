@@ -13,18 +13,20 @@
     <string name="lbl_maas">MAAS</string>
     <string name="lbl_data_source">API(Data-Source):</string>
     <string name="lbl_latest_data">Report Latest:</string>
-    <string name="lbl_latest_report_content">Min-temp:%1$.0fc, Max-temp:%2$.0fc\nPressure:%3$.0f\nAtmo Opacity:%4$s\nSunrise:%5$s\nSunset:%6$s</string>
+    <string name="lbl_latest_report_content">Min-temp:%1$.0fc, Max-temp:%2$.0fc\nPressure:%3$.0f\nAtmo Opacity:%4$s\nSunrise:%5$s\nSunset:%6$s\nSeason:%7$s\nTerrestrial Date:%8$s</string>
+    <string name="lbl_entry_content">Min-temp:%1$.0fc, Max-temp:%2$.0fc\nPressure:%3$s\nAtmo Opacity:%4$s\nSunrise:%5$s\nSunset:%6$s\n\nSeason:%7$s\nTerrestrial Date:%8$s</string>
     <string name="lbl_no_more_data">At data bottom.</string>
     <string name="lbl_loading_error">Loading failed!</string>
     <string name="lbl_loading_latest_report">Loading latest report…</string>
     <string name="lbl_loaded_latest_report">Refreshed latest report.</string>
     <string name="lbl_load_more">Loading more…</string>
     <string name="lbl_reload">Reloading all data at begin…</string>
-    <string name="lbl_jump_up">Jump up</string>
+    <string name="lbl_jump_up">Jump top</string>
+    <string name="lbl_loading_archive">Loading archive…</string>
 
-    <string name="lbl_share_download_app">Download %1$s\n%2$s</string>
+    <string name="lbl_share_download_app">Download %1$s:\n%2$s</string>
     <string name="lbl_share_app_title">Hey, there</string>
-    <string name="lbl_share_app_content">Hello!\n\nMy name is %1$s and I am a new free light-weight independent news App.\n\n%2$s</string>
+    <string name="lbl_share_app_content">Hello!\n\nHere is %1$s, to share publicly available mars data from NASA.\n\n%2$s</string>
     <string name="lbl_store_url">https://play.google.com/store/apps/details?id=%1$s</string>
     <string name="lbl_play_service">This application needs Google Play Service, you must install it first.</string>
 

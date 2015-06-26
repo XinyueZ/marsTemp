@@ -9,7 +9,7 @@ import com.marstemp.ds.Entry;
 
 /**
  * Helper-bind for {@link EntriesAdapter}.
- *
+ * <p/>
  * See more about <a href="https://developer.android.com/intl/zh-cn/tools/data-binding/guide.html">Data-binding</a>
  *
  * @author Xinyue Zhao
@@ -23,8 +23,9 @@ public final class EntriesAdapterBinder {
 
 	@BindingAdapter({ "entry" })
 	public static void setEntry(TextView tv, Entry entry) {
-		String entryContent = tv.getContext().getString(R.string.lbl_latest_report_content, entry.getMinTemp(),
-				entry.getMaxTemp(), entry.getPressure(), entry.getAtmoOpacity(), entry.getSunrise(), entry.getSunset());
+		String entryContent = tv.getContext().getString(R.string.lbl_entry_content, entry.getMinTemp(),
+				entry.getMaxTemp(), String.format("%.0f, %s", entry.getPressure(), entry.getPressureStr()), entry.getAtmoOpacity(), entry.getSunrise(), entry.getSunset(),
+				entry.getSeason(), entry.getTerrestrialDate());
 		tv.setText(entryContent);
 	}
 }
