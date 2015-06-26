@@ -1,0 +1,100 @@
+<resources>
+
+
+    <style name="ActionBar_ToolBar">
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:minHeight">?attr/actionBarSize</item>
+        <item name="android:elevation">@dimen/common_high_elevation</item>
+        <item name="android:popupTheme">@style/ToolbarTheme</item>
+        <item name="popupTheme">@style/ToolbarTheme</item>
+        <item name="elevation">@dimen/common_high_elevation</item>
+
+    </style>
+
+
+
+    <style name="ActionBar_ToolBar_Standalone" parent="ActionBar_ToolBar">
+        <item name="android:background">@color/primary_color</item>
+        <item name="background">@color/primary_color</item>
+        <item name="android:theme">@style/AppTheme</item>
+        <item name="theme">@style/AppTheme</item>
+    </style>
+
+
+    <style name="Text">
+        <item name="android:textColor">@color/common_black</item>
+    </style>
+
+
+    <style name="Text.Normal">
+        <item name="font">cn</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+    </style>
+
+    <style name="Text.Normal.Small">
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+    </style>
+
+
+    <style name="Text.Normal.Large">
+        <item name="android:textAppearance">?android:textAppearanceLarge</item>
+    </style>
+
+
+    <style name="Text.Bold">
+        <item name="font">boldCn</item>
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+    </style>
+
+    <style name="Text.Bold.Small">
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+    </style>
+
+    <style name="Text.Bold.Large">
+        <item name="android:textAppearance">?android:textAppearanceLarge</item>
+    </style>
+
+    <style name="Tab" parent="Text.Normal.Small">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/common_white</item>
+    </style>
+
+    <style name="Link" parent="Text.Normal.Small">
+        <item name="android:textColor">?colorPrimaryDark</item>
+    </style>
+
+    <style name="FAB">
+        <item name="android:layout_gravity">end|bottom</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">@dimen/fab_margin</item>
+        <item name="android:layout_marginBottom">@dimen/fab_margin</item>
+    </style>
+
+    <style name="ItemCardView">
+
+        <item name="contentPadding">0dp</item>
+        <item name="cardElevation">1dp</item>
+        <item name="cardMaxElevation">0dp</item>
+        <item name="cardUseCompatPadding">true</item>
+        <item name="cardCornerRadius">0dp</item>
+    </style>
+
+
+    <style name="MaterialRippleLayout">
+
+        <item name="mrl_rippleAlpha">0.2</item>
+        <item name="mrl_rippleColor">@color/primary_dark_color</item>
+        <item name="mrl_rippleDelayClick">true</item>
+        <item name="mrl_rippleHover">true</item>
+        <item name="mrl_rippleOverlay">true</item>
+    </style>
+
+
+    <style name="NavDrawerItem" parent="@style/Theme.AppCompat.Light">
+        <item name="android:textColor">@color/primary_accent</item>
+        <item name="android:textColorSecondary">@color/primary_accent</item>
+    </style>
+
+</resources>

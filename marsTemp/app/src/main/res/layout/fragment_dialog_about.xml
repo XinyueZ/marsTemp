@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/dialog_text_tv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/common_white"
+        android:padding="16dp"
+        android:textColor="@color/common_black"
+        android:textSize="14sp" />
+
+    <com.marstemp.widgets.MaterialRippleLayout
+        android:id="@+id/powered_by_ll"
+        style="@style/MaterialRippleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/common_white"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.marstemp.widgets.FontTextView
+                style="@style/Text.Normal.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/lbl_data_source" />
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="80dp"
+                android:layout_gravity="end"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:background="@color/common_transparent"
+                android:src="@drawable/mass" />
+        </LinearLayout>
+    </com.marstemp.widgets.MaterialRippleLayout>
+</LinearLayout>
