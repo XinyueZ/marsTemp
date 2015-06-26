@@ -11,4 +11,8 @@
         <item name="android:statusBarColor">@color/common_transparent</item>
     </style>
 
+    <style name="AppTheme.WebViewTheme">
+        <item name="android:statusBarColor">@color/primary_accent</item>
+    </style>
+
 </resources>

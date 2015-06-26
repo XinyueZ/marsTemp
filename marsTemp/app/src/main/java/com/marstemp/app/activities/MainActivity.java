@@ -23,6 +23,9 @@ import android.widget.TextView;
 
 import com.chopping.bus.CloseDrawerEvent;
 import com.chopping.utils.Utils;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.marstemp.R;
 import com.marstemp.api.Api;
 import com.marstemp.app.App;
@@ -72,7 +75,10 @@ public class MainActivity extends MarsTempActivity {
 	 * Current loading page.
 	 */
 	private volatile int mPage = App.FIRST_PAGE;
-
+	/**
+	 * The interstitial ad.
+	 */
+	private InterstitialAd mInterstitialAd;
 	//[Begin for detecting scrolling onto bottom]
 	private int mVisibleItemCount;
 	private int mPastVisibleItems;
@@ -148,6 +154,7 @@ public class MainActivity extends MarsTempActivity {
 		initPull2Load();
 		setupDrawerContent(mBinding.navView);
 		initList();
+		initAdmob();
 		mBinding.fab.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -160,6 +167,7 @@ public class MainActivity extends MarsTempActivity {
 		});
 	}
 
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -167,6 +175,41 @@ public class MainActivity extends MarsTempActivity {
 		outState.putBoolean("isBottom", mIsBottom);
 		outState.putBoolean("loadingLatest", mLoadingLatest);
 		outState.putBoolean("loadingArchive", mLoadingArchive);
+	}
+
+	/**
+	 * Ads for the app.
+	 */
+	private void initAdmob() {
+		int curTime = App.Instance.getAdsShownTimes();
+		int adsTimes = 7;
+		if (curTime % adsTimes == 0) {
+			// Create an ad.
+			mInterstitialAd = new InterstitialAd(this);
+			mInterstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+			// Create ad request.
+			AdRequest adRequest = new AdRequest.Builder().build();
+			// Begin loading your interstitial.
+			mInterstitialAd.setAdListener(new AdListener() {
+				@Override
+				public void onAdLoaded() {
+					super.onAdLoaded();
+					displayInterstitial();
+				}
+			});
+			mInterstitialAd.loadAd(adRequest);
+		}
+		curTime++;
+		App.Instance.setAdsShownTimes(curTime);
+	}
+
+	/**
+	 * Invoke displayInterstitial() when you are ready to display an interstitial.
+	 */
+	public void displayInterstitial() {
+		if (mInterstitialAd.isLoaded()) {
+			mInterstitialAd.show();
+		}
 	}
 
 	/**

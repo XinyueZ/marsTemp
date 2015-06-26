@@ -33,7 +33,8 @@
         <activity
             android:name=".app.activities.WebViewActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.WebViewTheme" />
 
 
         <!--Include the AdActivity configChanges and theme. -->
