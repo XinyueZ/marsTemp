@@ -15,15 +15,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.chopping.bus.CloseDrawerEvent;
+import com.chopping.utils.Utils;
 import com.marstemp.R;
+import com.marstemp.api.Api;
+import com.marstemp.app.App;
 import com.marstemp.app.fragments.AboutDialogFragment;
 import com.marstemp.app.fragments.AppListImpFragment;
 import com.marstemp.bus.EULAConfirmedEvent;
 import com.marstemp.bus.EULARejectEvent;
 import com.marstemp.databinding.ActivityMainBinding;
+import com.marstemp.ds.Entry;
+import com.marstemp.ds.Latest;
 import com.marstemp.utils.Prefs;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Main {@link android.app.Activity} of the App.
@@ -47,6 +57,10 @@ public class MainActivity extends MarsTempActivity {
 	 * Data-binding.
 	 */
 	private ActivityMainBinding mBinding;
+	/**
+	 * Latest report data.
+	 */
+	private TextView mLatestReportTv;
 
 	//[Begin for detecting scrolling onto bottom]
 	private int mVisibleItemCount;
@@ -111,6 +125,7 @@ public class MainActivity extends MarsTempActivity {
 		mBinding = DataBindingUtil.setContentView(this, LAYOUT);
 		//Init application basic elements.
 		setUpErrorHandling((ViewGroup) findViewById(R.id.error_content));
+		initNavHead();
 		initAppBar();
 		initPull2Load();
 		setupDrawerContent(mBinding.navView);
@@ -121,6 +136,20 @@ public class MainActivity extends MarsTempActivity {
 //				if (mBinding.getEntriesAdapter() != null && mBinding.getEntriesAdapter().getItemCount() > 0) {
 //					mLayoutManager.scrollToPositionWithOffset(0, 0);
 //				}
+			}
+		});
+	}
+
+	/**
+	 * Init the "head"-view on the navigation-drawer.
+	 */
+	private void initNavHead() {
+		mLatestReportTv = (TextView) findViewById(R.id.latest_data_tv);
+		findViewById(R.id.latest_retry_vg).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Utils.showLongToast(App.Instance, R.string.lbl_loading_latest_report);
+				getLatest();
 			}
 		});
 	}
@@ -255,12 +284,16 @@ public class MainActivity extends MarsTempActivity {
 	protected void onAppConfigLoaded() {
 		super.onAppConfigLoaded();
 		showAppList();
+		com.marstemp.api.Api.initialize(App.Instance, Prefs.getInstance().getApiHost());
+		getLatest();
 	}
 
 	@Override
 	protected void onAppConfigIgnored() {
 		super.onAppConfigIgnored();
 		showAppList();
+		com.marstemp.api.Api.initialize(App.Instance, Prefs.getInstance().getApiHost());
+		getLatest();
 	}
 
 	/**
@@ -269,5 +302,42 @@ public class MainActivity extends MarsTempActivity {
 	private void showAppList() {
 		getSupportFragmentManager().beginTransaction().replace(R.id.app_list_fl, AppListImpFragment.newInstance(this))
 				.commit();
+	}
+
+	/**
+	 * {@code true} if it is stilling loading the last report.
+	 */
+	private volatile boolean mLoadingLatest;
+
+	/**
+	 * Get latest data.
+	 */
+	private synchronized  void getLatest() {
+		if(!mLoadingLatest) {
+			mLoadingLatest = true;
+			Api.getLatest(Prefs.getInstance().getApiLatest(), new Callback<Latest>() {
+				@Override
+				public void success(Latest latest, Response response) {
+					Entry entry = latest.getReport();
+					String latestReport = getString(R.string.lbl_latest_report_content,
+							entry.getMinTemp(),
+							entry.getMaxTemp(),
+							entry.getPressure(),
+							entry.getAtmoOpacity(),
+							entry.getSunrise(),
+							entry.getSunset()
+							);
+					mLatestReportTv.setText(latestReport);
+					mLoadingLatest=false;
+					Utils.showLongToast(App.Instance, R.string.lbl_loaded_latest_report);
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					mLoadingLatest=false;
+					mLatestReportTv.setText(R.string.lbl_loading_error);
+				}
+			});
+		}
 	}
 }
