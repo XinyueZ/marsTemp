@@ -17,7 +17,10 @@
     <string name="lbl_no_more_data">At data bottom.</string>
     <string name="lbl_loading_error">Loading failed!</string>
     <string name="lbl_loading_latest_report">Loading latest report…</string>
-    <string name="lbl_loaded_latest_report">Refreshed latest report</string>
+    <string name="lbl_loaded_latest_report">Refreshed latest report.</string>
+    <string name="lbl_load_more">Loading more…</string>
+    <string name="lbl_reload">Reloading all data at begin…</string>
+    <string name="lbl_jump_up">Jump up</string>
 
     <string name="lbl_share_download_app">Download %1$s\n%2$s</string>
     <string name="lbl_share_app_title">Hey, there</string>

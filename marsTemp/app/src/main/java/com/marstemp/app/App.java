@@ -48,6 +48,14 @@ import retrofit.RetrofitError;
  */
 public final class App extends Application {
 	/**
+	 * Const means that no-data available.
+	 */
+	public static final String NOT_FOUND = "Not found";
+	/**
+	 * First page-index of archive.
+	 */
+	public static final int FIRST_PAGE= 1;
+	/**
 	 * Singleton.
 	 */
 	public static App Instance;

@@ -3,12 +3,14 @@ package com.marstemp.app.activities;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,11 +24,13 @@ import com.chopping.utils.Utils;
 import com.marstemp.R;
 import com.marstemp.api.Api;
 import com.marstemp.app.App;
+import com.marstemp.app.adapters.EntriesAdapter;
 import com.marstemp.app.fragments.AboutDialogFragment;
 import com.marstemp.app.fragments.AppListImpFragment;
 import com.marstemp.bus.EULAConfirmedEvent;
 import com.marstemp.bus.EULARejectEvent;
 import com.marstemp.databinding.ActivityMainBinding;
+import com.marstemp.ds.Archive;
 import com.marstemp.ds.Entry;
 import com.marstemp.ds.Latest;
 import com.marstemp.utils.Prefs;
@@ -61,6 +65,10 @@ public class MainActivity extends MarsTempActivity {
 	 * Latest report data.
 	 */
 	private TextView mLatestReportTv;
+	/**
+	 * Current loading page.
+	 */
+	private volatile int mPage = App.FIRST_PAGE;
 
 	//[Begin for detecting scrolling onto bottom]
 	private int mVisibleItemCount;
@@ -121,8 +129,15 @@ public class MainActivity extends MarsTempActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		if (savedInstanceState != null) {
+			mPage = savedInstanceState.getInt("page");
+			mIsBottom = savedInstanceState.getBoolean("isBottom");
+			mLoadingLatest = savedInstanceState.getBoolean("loadingLatest");
+			mLoadingArchive = savedInstanceState.getBoolean("loadingArchive");
+		}
 		//Init data-binding.
 		mBinding = DataBindingUtil.setContentView(this, LAYOUT);
+		mBinding.setEntriesAdapter(new EntriesAdapter());
 		//Init application basic elements.
 		setUpErrorHandling((ViewGroup) findViewById(R.id.error_content));
 		initNavHead();
@@ -133,11 +148,22 @@ public class MainActivity extends MarsTempActivity {
 		mBinding.fab.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				if (mBinding.getEntriesAdapter() != null && mBinding.getEntriesAdapter().getItemCount() > 0) {
-//					mLayoutManager.scrollToPositionWithOffset(0, 0);
-//				}
+				//Click FAB and jump page to top.
+				if (mBinding.getEntriesAdapter() != null && mBinding.getEntriesAdapter().getItemCount() > 0) {
+					mLayoutManager.scrollToPositionWithOffset(0, 0);
+				}
+				Utils.showShortToast(App.Instance, R.string.lbl_jump_up);
 			}
 		});
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt("page", mPage);
+		outState.putBoolean("isBottom", mIsBottom);
+		outState.putBoolean("loadingLatest", mLoadingLatest);
+		outState.putBoolean("loadingArchive", mLoadingArchive);
 	}
 
 	/**
@@ -182,16 +208,17 @@ public class MainActivity extends MarsTempActivity {
 					mPastVisibleItems = ((LinearLayoutManager) mLayoutManager).findFirstVisibleItemPosition();
 				}
 
-				//if (!mIsBottom) {
-				if (mLoading) {
-					if ((mVisibleItemCount + mPastVisibleItems) >= mTotalItemCount) {
-						mLoading = false;
-						//mStart += 10;
-						//getData();
+				if (!mIsBottom) {
+					if (mLoading) {
+						if ((mVisibleItemCount + mPastVisibleItems) >= mTotalItemCount) {
+							mLoading = false;
+							mPage++;//Move to next page.
+							Snackbar.make(mBinding.coordinatorLayout, R.string.lbl_load_more, Snackbar.LENGTH_SHORT)
+									.show();
+							getArchive();
+						}
 					}
 				}
-				//}
-
 			}
 
 		});
@@ -218,8 +245,14 @@ public class MainActivity extends MarsTempActivity {
 		mBinding.contentSrl.setOnRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				//				TabLabelManager.getInstance().init(MainActivity.this, false);
-				//getData();
+				//Reload all data.
+				mIsBottom = false;
+				mPage = 1;
+				mLoadingArchive = false;
+				mBinding.getEntriesAdapter().getData().clear();
+				Snackbar.make(mBinding.coordinatorLayout, R.string.lbl_reload,
+						Snackbar.LENGTH_SHORT).show();
+				getArchive();
 			}
 		});
 	}
@@ -286,6 +319,7 @@ public class MainActivity extends MarsTempActivity {
 		showAppList();
 		com.marstemp.api.Api.initialize(App.Instance, Prefs.getInstance().getApiHost());
 		getLatest();
+		getArchive();
 	}
 
 	@Override
@@ -294,6 +328,7 @@ public class MainActivity extends MarsTempActivity {
 		showAppList();
 		com.marstemp.api.Api.initialize(App.Instance, Prefs.getInstance().getApiHost());
 		getLatest();
+		getArchive();
 	}
 
 	/**
@@ -312,32 +347,82 @@ public class MainActivity extends MarsTempActivity {
 	/**
 	 * Get latest data.
 	 */
-	private synchronized  void getLatest() {
-		if(!mLoadingLatest) {
+	private synchronized void getLatest() {
+		if (!mLoadingLatest) {
 			mLoadingLatest = true;
 			Api.getLatest(Prefs.getInstance().getApiLatest(), new Callback<Latest>() {
 				@Override
 				public void success(Latest latest, Response response) {
 					Entry entry = latest.getReport();
-					String latestReport = getString(R.string.lbl_latest_report_content,
-							entry.getMinTemp(),
-							entry.getMaxTemp(),
-							entry.getPressure(),
-							entry.getAtmoOpacity(),
-							entry.getSunrise(),
-							entry.getSunset()
-							);
+					String latestReport = getString(R.string.lbl_latest_report_content, entry.getMinTemp(),
+							entry.getMaxTemp(), entry.getPressure(), entry.getAtmoOpacity(), entry.getSunrise(),
+							entry.getSunset());
 					mLatestReportTv.setText(latestReport);
-					mLoadingLatest=false;
+					mLoadingLatest = false;
 					Utils.showLongToast(App.Instance, R.string.lbl_loaded_latest_report);
 				}
 
 				@Override
 				public void failure(RetrofitError error) {
-					mLoadingLatest=false;
+					mLoadingLatest = false;
 					mLatestReportTv.setText(R.string.lbl_loading_error);
 				}
 			});
+		}
+	}
+
+	/**
+	 * {@code true} if it is stilling loading archive.
+	 */
+	private volatile boolean mLoadingArchive;
+	/**
+	 * {@code true} if reached bottom of data-source.
+	 */
+	private volatile boolean mIsBottom;
+
+	/**
+	 * Load list of archives.
+	 */
+	private synchronized void getArchive() {
+		if (!mLoadingArchive) {
+			mBinding.contentSrl.setRefreshing(true);
+			mLoadingArchive = true;
+			Api.getArchive(Prefs.getInstance().getApiArchive(), mPage, new Callback<Archive>() {
+						@Override
+						public void success(Archive archive, Response response) {
+							if (TextUtils.equals(archive.getDetail(), App.NOT_FOUND)) {
+								mIsBottom = true;
+								Snackbar.make(mBinding.coordinatorLayout, R.string.lbl_no_more_data,
+										Snackbar.LENGTH_LONG).show();
+							} else {
+								mBinding.getEntriesAdapter().getData().addAll(archive.getResults());
+								mBinding.getEntriesAdapter().notifyDataSetChanged();
+								//Finish loading
+								mBinding.contentSrl.setRefreshing(false);
+								mLoadingArchive = false;
+								mLoading = true;
+							}
+						}
+
+						@Override
+						public void failure(RetrofitError error) {
+							if (mPage > App.FIRST_PAGE) {
+								mPage--;
+							}
+							Snackbar.make(mBinding.coordinatorLayout, R.string.lbl_loading_error, Snackbar.LENGTH_LONG)
+									.setAction(R.string.btn_retry, new OnClickListener() {
+										@Override
+										public void onClick(View v) {
+											getArchive();
+										}
+									}).show();
+
+							//Finish loading
+							mBinding.contentSrl.setRefreshing(false);
+							mLoadingArchive = false;
+							mLoading = true;
+						}
+					});
 		}
 	}
 }

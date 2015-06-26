@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="entriesAdapter"
+            type="com.marstemp.app.adapters.EntriesAdapter" />
     </data>
 
     <android.support.v4.widget.DrawerLayout
@@ -46,7 +49,8 @@
                         android:id="@+id/entries_rv"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scrollbars="none" />
+                        android:scrollbars="none"
+                        app:entriesAdapter="@{entriesAdapter}"/>
                 </android.support.v4.widget.SwipeRefreshLayout>
             </FrameLayout>
 

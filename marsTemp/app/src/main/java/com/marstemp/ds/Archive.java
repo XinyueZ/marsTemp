@@ -9,12 +9,18 @@ import com.google.gson.annotations.SerializedName;
  *
  * @author Xinyue Zhao
  */
-public final class Archive {
+public final class 	Archive {
+	@SerializedName("detail")
+	private String mDetail;
 	@SerializedName("results")
 	private List<Entry> mResults;
 
 
 	public List<Entry> getResults() {
 		return mResults;
+	}
+
+	public String getDetail() {
+		return mDetail;
 	}
 }
