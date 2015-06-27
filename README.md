@@ -14,6 +14,10 @@ Related submodule project [Chopping](https://github.com/XinyueZ/Chopping).
 
 [Data-binding](https://developer.android.com/intl/zh-cn/tools/data-binding/guide.html) 
 
+Bus: [greenrobot](https://github.com/greenrobot/EventBus)
+
+Some other 3rd, see more in App under menu/About
+
 # Fork me
 1. clone
 2. git submodule update -i.         //import [Chopping](https://github.com/XinyueZ/Chopping).
