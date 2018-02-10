@@ -40,27 +40,27 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':ChoppingBootstrap')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':ChoppingBootstrap')
 
 
-    compile("com.android.support:support-compat:$rootProject.ext.supportLib4")
-    compile("com.android.support:support-core-utils:$rootProject.ext.supportLib4")
-    compile("com.android.support:support-core-ui:$rootProject.ext.supportLib4")
-    compile("com.android.support:support-media-compat:$rootProject.ext.supportLib4")
-    compile("com.android.support:appcompat-v7:$rootProject.ext.supportLib7") {
+    implementation("com.android.support:support-compat:$rootProject.ext.supportLib4")
+    implementation("com.android.support:support-core-utils:$rootProject.ext.supportLib4")
+    implementation("com.android.support:support-core-ui:$rootProject.ext.supportLib4")
+    implementation("com.android.support:support-media-compat:$rootProject.ext.supportLib4")
+    implementation("com.android.support:appcompat-v7:$rootProject.ext.supportLib7") {
         exclude module: 'support-v4'
     }
-    compile("com.android.support:design:$rootProject.ext.supportDesign")
-    compile("com.android.support:cardview-v7:$rootProject.ext.cardView")
-    compile("com.android.support:recyclerview-v7:$rootProject.ext.recycler")
-    compile("com.google.android.gms:play-services:$rootProject.ext.play")
-    compile("com.android.support:multidex:$rootProject.ext.multidexVersion")
+    implementation("com.android.support:design:$rootProject.ext.supportDesign")
+    implementation("com.android.support:cardview-v7:$rootProject.ext.cardView")
+    implementation("com.android.support:recyclerview-v7:$rootProject.ext.recycler")
+    implementation("com.google.android.gms:play-services:$rootProject.ext.play")
+    implementation("com.android.support:multidex:$rootProject.ext.multidexVersion")
 
-    compile("com.github.shell-software:fab:$rootProject.ext.fabLib")
-    compile("com.squareup.retrofit:retrofit:$rootProject.ext.retrofit")
-    compile("com.squareup.okhttp:okhttp-urlconnection:$rootProject.ext.okhttpUrlConnection")
-    compile("com.squareup.okhttp:okhttp:$rootProject.ext.okhttp")
+    implementation("com.github.shell-software:fab:$rootProject.ext.fabLib")
+    implementation("com.squareup.retrofit:retrofit:$rootProject.ext.retrofit")
+    implementation("com.squareup.okhttp:okhttp-urlconnection:$rootProject.ext.okhttpUrlConnection")
+    implementation("com.squareup.okhttp:okhttp:$rootProject.ext.okhttp")
 }
 
 // Rename final apks
