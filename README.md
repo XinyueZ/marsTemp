@@ -6,7 +6,7 @@ Shows weather data from mars.
 # Tech
 Data-provider [MAAS API](http://marsweather.ingenology.com/)
 
-Available from Android 2.3
+Available from Android 5.x(API 21, actually it could be lower, however, I want the application to support instant-app.)
 
 Related submodule project [Chopping](https://github.com/XinyueZ/Chopping).
 
@@ -30,7 +30,7 @@ Some other 3rd, see more in App under menu/About
  ```html
 
                         The MIT License (MIT)
-                  Copyright (c) 2015 Chris Xinyue Zhao
+                  Copyright (c) 2018 Chris Xinyue Zhao
 
 			Permission is hereby granted, free of charge, to any person obtaining a copy
 			of this software and associated documentation files (the "Software"), to deal
