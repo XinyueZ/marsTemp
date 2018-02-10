@@ -14,7 +14,7 @@ licenses:
 jdk:
     - oraclejdk8
 script:
-    - marsTemp/gradlew clean assembleDebug
+    - ./marsTemp/gradlew clean assembleDebug
 before_cache:
     - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
 cache:
@@ -23,5 +23,5 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 before_install:
-      - chmod +x ./gradlew
+      - chmod +x ./marsTemp/gradlew
       - yes | sdkmanager "platforms;android-27"
