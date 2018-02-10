@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="FontButton">
-        <attr name="font">
+        <attr name="new_font">
             <enum name="cn" value="1" />
             <enum name="boldCn" value="2" />
         </attr>

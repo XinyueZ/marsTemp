@@ -28,7 +28,7 @@
 
 
     <style name="Text.Normal">
-        <item name="font">cn</item>
+        <item name="new_font">cn</item>
         <item name="android:textAppearance">?android:textAppearanceMedium</item>
     </style>
 
@@ -43,7 +43,7 @@
 
 
     <style name="Text.Bold">
-        <item name="font">boldCn</item>
+        <item name="new_font">boldCn</item>
         <item name="android:textAppearance">?android:textAppearanceMedium</item>
     </style>
 
