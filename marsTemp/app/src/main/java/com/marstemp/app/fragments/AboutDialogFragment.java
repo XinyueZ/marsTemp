@@ -109,7 +109,7 @@ public final class AboutDialogFragment extends DialogFragment {
 		LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(
 				Context.LAYOUT_INFLATER_SERVICE);
 		View dialogV = layoutInflater.inflate(R.layout.fragment_dialog_about, null);
-		;
+
 		TextView aboutBodyView = (TextView) dialogV.findViewById(R.id.dialog_text_tv);
 		aboutBodyView.setText(aboutBody);
 		aboutBodyView.setMovementMethod(new LinkMovementMethod());
