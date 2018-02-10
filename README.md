@@ -1,6 +1,8 @@
 # marsTemp
 Shows weather data from mars.
 
+[![Build Status](https://travis-ci.org/XinyueZ/marsTemp.svg?branch=master)](https://travis-ci.org/XinyueZ/marsTemp)
+
 [![https://play.google.com/store/apps/details?id=com.marstemp](https://dl.dropbox.com/s/phrg0387osr3riz/images.jpeg)](https://play.google.com/store/apps/details?id=com.marstemp)
 
 # Tech
