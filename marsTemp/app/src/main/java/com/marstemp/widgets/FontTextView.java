@@ -36,7 +36,7 @@ public class FontTextView extends TextView {
 
 		TypedArray a = context.obtainStyledAttributes(attrs,
 				R.styleable.FontButton);
-		int fontIndex = a.getInt(R.styleable.FontButton_font, -1);
+		int fontIndex = a.getInt(R.styleable.FontButton_new_font, -1);
 
 		// defined in attrs_fontui.xml
 		switch (fontIndex) {
@@ -69,7 +69,7 @@ public class FontTextView extends TextView {
 	 * <a href="http://code.google.com/p/android/issues/detail?id=9904">Google Code</a>
 	 */
 	public final static class Fonts {
-		private static final ConcurrentHashMap<String, Typeface> sTypefaces = new ConcurrentHashMap<String, Typeface>();
+		private static final ConcurrentHashMap<String, Typeface> sTypefaces = new ConcurrentHashMap<>();
 
 		public static final String FONT_CN = "NotoSerif-Regular.ttf";
 		public static final String FONT_BOLD_CN = "NotoSerif-Bold.ttf";

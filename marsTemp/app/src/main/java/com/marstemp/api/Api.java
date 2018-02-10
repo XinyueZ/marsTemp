@@ -1,16 +1,15 @@
 package com.marstemp.api;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-
 import android.content.Context;
 import android.util.Log;
 
 import com.marstemp.ds.Archive;
 import com.marstemp.ds.Latest;
 import com.squareup.okhttp.OkHttpClient;
+
+import java.io.File;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
@@ -29,12 +28,7 @@ public final class Api {
 	/**
 	 * For header, cache before request will be out.
 	 */
-	private final static RequestInterceptor sInterceptor = new RequestInterceptor() {
-		@Override
-		public void intercept(RequestFacade request) {
-			request.addHeader("Content-Type", "application/json");
-		}
-	};
+	private final static RequestInterceptor sInterceptor = request-> request.addHeader("Content-Type", "application/json");
 	private static final String TAG = Api.class.getSimpleName();
 	/**
 	 * Response-cache.
@@ -69,20 +63,14 @@ public final class Api {
 
 		File cacheDir = new File(cxt != null ? cxt.getCacheDir().getAbsolutePath() : System.getProperty(
 				"java.io.tmpdir"), UUID.randomUUID().toString());
-		try {
-			sCache = new com.squareup.okhttp.Cache(cacheDir, sCacheSize);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		sCache = new com.squareup.okhttp.Cache(cacheDir, sCacheSize);
 		okHttpClient.setCache(sCache);
 		okHttpClient.setReadTimeout(3600, TimeUnit.SECONDS);
 		okHttpClient.setConnectTimeout(3600, TimeUnit.SECONDS);
 		sClient = new OkClient(okHttpClient);
 
-
-
 		RestAdapter adapter = new RestAdapter.Builder().setClient(sClient).setRequestInterceptor(sInterceptor)
-				.setLogLevel(RestAdapter.LogLevel.FULL).setEndpoint(sHost).build();
+				.setLogLevel(RestAdapter.LogLevel.FULL).setServer(sHost).build();
 		s = adapter.create(S.class);
 	}
 

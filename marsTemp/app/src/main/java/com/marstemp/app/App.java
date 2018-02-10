@@ -30,7 +30,7 @@
 //                  别人笑我忒疯癫，我笑自己命太贱。
 package com.marstemp.app;
 
-import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 
 import com.chopping.net.TaskHelper;
@@ -46,7 +46,7 @@ import retrofit.RetrofitError;
  *
  * @author Xinyue Zhao
  */
-public final class App extends Application {
+public final class App extends MultiDexApplication {
 	/**
 	 * Const means that no-data available.
 	 */
