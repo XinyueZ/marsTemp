@@ -12,7 +12,7 @@ buildscript {
     ext.multidexVersion = "1.0.2"
 
     ext.fabLib = "1.1.1"
-    ext.retrofit = "1.3.0"
+    ext.retrofit = "1.9.0"
     ext.okhttpUrlConnection = "2.2.0"
     ext.okhttp = "2.7.5"
 

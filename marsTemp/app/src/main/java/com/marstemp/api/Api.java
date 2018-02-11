@@ -70,7 +70,7 @@ public final class Api {
 		sClient = new OkClient(okHttpClient);
 
 		RestAdapter adapter = new RestAdapter.Builder().setClient(sClient).setRequestInterceptor(sInterceptor)
-				.setLogLevel(RestAdapter.LogLevel.FULL).setServer(sHost).build();
+				.setLogLevel(RestAdapter.LogLevel.FULL).setEndpoint(sHost).build();
 		s = adapter.create(S.class);
 	}
 
